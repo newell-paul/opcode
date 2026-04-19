@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "title": "off-by-one in sum()",
+    "labels": ["bug"],
+    "body": "The sum() function increments by 2 instead of 1, causing incorrect totals."
+  },
+  {
+    "id": 2,
+    "title": "crash on empty input",
+    "labels": ["bug", "urgent"],
+    "body": "Passing an empty array causes a fatal error instead of returning 0."
+  },
+  {
+    "id": 3,
+    "title": "add --verbose flag",
+    "labels": ["enhancement"],
+    "body": "Add a --verbose CLI flag to print debug information during execution."
+  }
+]
