@@ -40,8 +40,20 @@ The skill runs `doctor` automatically on first invocation in a session. You only
 |----------|-----------------------------|--------------|
 | GitHub   | `scripts/drivers/github.mjs` | [`gh`](https://cli.github.com/) |
 | GitLab   | `scripts/drivers/gitlab.mjs` | [`glab`](https://gitlab.com/gitlab-org/cli) |
+| Local    | `scripts/drivers/local.mjs`  | none |
 
 Both CLIs must be installed and authenticated (`gh auth login` / `glab auth login`) before running any I/O opcodes.
+
+The `local` driver reads issues from `.opcode/todos.json` instead of a remote forge — no CLI auth required. Useful for development, testing, or offline workflows. Set `OPCODE_FORGE=local` or `{"forge":"local"}` in `.opcode.json`, then create `.opcode/todos.json`:
+
+```json
+[
+  { "id": 1, "title": "off-by-one in sum()", "labels": ["bug"], "body": "..." },
+  { "id": 2, "title": "crash on empty input", "labels": ["bug", "urgent"], "body": "..." }
+]
+```
+
+`PUSH` in local mode logs what would have been pushed (branch name + last commit subject) without touching any remote.
 
 ## Detection order
 

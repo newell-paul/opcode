@@ -57,6 +57,7 @@ export function run(cmd, args) {
     return { stdout: "", stderr: "", status: 0 };
   }
   const r = spawnSync(cmd, args, { encoding: "utf8" });
+  if (r.error) { console.error(r.error.message); process.exit(1); }
   if (r.status !== 0) {
     console.error(r.stderr || `${cmd} failed`);
     process.exit(r.status || 1);
@@ -143,6 +144,10 @@ if (process.argv[2] === "doctor") doctor();
 
 // --- dispatch ---
 const sub = process.argv[2];
+if (!sub || !["detect", "fetch", "view", "pr", "mr"].includes(sub)) {
+  console.error("usage: forge.mjs <doctor|detect|fetch|view|pr> [args]");
+  process.exit(1);
+}
 const forgeName = detectForge();
 const driver = DRIVERS[forgeName];
 if (!driver) {
@@ -156,7 +161,7 @@ switch (sub) {
     break;
   }
   case "fetch": {
-    const mask = parseInt(arg("--labels", "0"), 10);
+    const mask = parseInt(arg("--labels", "0"), 0) || 0;
     const ids = driver.fetch({ labels: maskToLabels(mask), run });
     for (const id of ids) console.log(id);
     break;
@@ -174,6 +179,5 @@ switch (sub) {
     break;
   }
   default:
-    console.error("usage: forge.mjs <doctor|detect|fetch|view|pr> [args]");
-    process.exit(1);
+    break;
 }

@@ -45,13 +45,13 @@ When any of these are the only source of context and the ticket body alone is in
 
 ## Authoritative reference
 
-**Always read `ISA.md` at the start of every run.** It is the single source of truth. Start with the **Core ISA** section. If the user writes an opcode that isn't in the Core ISA, check whether it's in Extended (permitted with `.EXTENDED ON`) or Unsafe (permitted with `.UNSAFE ON`). If it's in none of those three sections, stop and say so — do not invent behavior.
+**Always read `ISA.md` at the start of every run.** It is the single source of truth for the Core ISA. If the program contains `.EXTENDED ON`, also read `ISA-extended.md` before executing any extended opcode. If it contains `.UNSAFE ON`, also read `ISA-unsafe.md`. If an opcode appears that isn't in the loaded layer(s), stop and say so — do not invent behavior.
 
-`OPCODES.md` is the printable cheat sheet.
+`OPCODES.md` is a human-readable printable cheat sheet — do not read it at runtime; `ISA.md` is authoritative.
 
 ## The core 15
 
-This is the entire working vocabulary. Everything `peek.s`, `oneshot.s`, and `drain-the-swamp.s` actually use fits in this list. `full-triage.s` layers on `.IRQ` + `RTI` from the extended set.
+This is the entire working vocabulary. Everything `peek.s`, `oneshot.s`, and `drain-the-swamp.s` actually use fits in this list.
 
 | # | Op | Effect | Flags |
 |---|---|---|---|
@@ -185,6 +185,8 @@ All forge interaction goes through `scripts/forge.mjs` (resolved per the **Execu
 ## Output format — Claude responds in 6502
 
 **This is the single most important rule in the skill.** While `opcode` is active, Claude's entire response is itself a valid `.s` program. The trace IS the reply. There is no prose around it, before it, or after it.
+
+**No text before the first trace line — ever.** Do not announce that you are reading files, running doctor, or assembling the program. Do not say "I'll start by…", "Let me…", "Now running…", or anything else. The `.FORGE` directive is the first line of output. Tool calls happen silently between trace lines.
 
 ### Absolute rules
 

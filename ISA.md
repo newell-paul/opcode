@@ -3,8 +3,8 @@
 The authoritative opcode → action contract. Claude reads this at the start of every run. Organized in three layers:
 
 1. **Core ISA** — 15 opcodes + 9 I/O vectors. The real working set. Always enabled.
-2. **Extended** — the rest of the 6502-ish ISA. Opt-in via `.EXTENDED ON`. Mix of real and metaphor.
-3. **Unsafe** — six illegal opcodes. Opt-in via `.UNSAFE ON`. Pure flavor — narrated, never executed.
+2. **Extended** — the rest of the 6502-ish ISA. Opt-in via `.EXTENDED ON`. Defined in `ISA-extended.md` — read that file only when `.EXTENDED ON` appears in the program.
+3. **Unsafe** — six illegal opcodes. Opt-in via `.UNSAFE ON`. Defined in `ISA-unsafe.md` — read that file only when `.UNSAFE ON` appears in the program.
 
 Flags column uses standard 6502 notation: `N V - B D I Z C`. A dash means the flag is untouched.
 
@@ -106,115 +106,7 @@ In particular: **never write issue numbers in hex.** `LDA #42` is always clearer
 
 ---
 
-# 2 · Extended ISA (compatibility layer)
-
-Everything below requires `.EXTENDED ON` earlier in the program. It exists so that nostalgic 6502 programs assemble and narrate correctly, and so that real arithmetic/logic/transfer behavior is available if someone actually needs it. Most of the extended layer is `M`-tagged metaphor — narrated, not executed.
-
-## 2.1 Extended load/store
-
-| Mnemonic | Effect | Flags | Tag |
-|---|---|---|---|
-| `LDY #imm` | Load `Y` | `N Z` | **L** |
-| `STX $zp` | Persist `X` to slot | `-` | **L** |
-| `STY $zp` | Persist `Y` to slot | `-` | **L** |
-
-## 2.2 Extended stack / todos
-
-| Mnemonic | Effect | Flags | Tag |
-|---|---|---|---|
-| `TSX` | `X ← SP` — count of pending todos | `N Z` | **L** |
-| `PHP` | "Push flag state as a status-note todo" | `-` | **M** |
-| `PLP` | "Pop a status-note todo, restore flags" | `N V D I Z C` | **M** |
-| `TXS` | "Truncate todo list to `X` entries" (requires `.UNSAFE ON`) | `-` | **M** |
-
-## 2.3 Arithmetic
-
-| Mnemonic | Effect | Flags | Tag |
-|---|---|---|---|
-| `INY` / `DEY` | Advance/rewind secondary (file-in-issue) cursor | `N Z` | **L** |
-| `DEX` | Rewind loop cursor | `N Z` | **L** |
-| `ADC $zp` | "Apply a diff hunk from `$zp`" | `N V Z C` | **M** |
-| `SBC $zp` | "Revert a hunk" | `N V Z C` | **M** |
-| `INC $zp` / `DEC $zp` | "Bump file cursor via zero-page" (redundant with `INY`/`DEY`) | `N Z` | **M** |
-
-## 2.4 Logic (label-filter algebra)
-
-| Mnemonic | Effect | Flags | Tag |
-|---|---|---|---|
-| `AND #imm` | "Intersect label mask" | `N Z` | **M** |
-| `ORA #imm` | "Union label mask" | `N Z` | **M** |
-| `EOR #imm` | "Toggle label bits" | `N Z` | **M** |
-| `BIT $zp` | "Non-destructive label test" | `N V Z` | **M** |
-
-## 2.5 Shifts
-
-| Mnemonic | Effect | Flags | Tag |
-|---|---|---|---|
-| `ASL A` | "Promote priority" | `N Z C` | **M** |
-| `LSR A` | "Demote priority" | `N Z C` | **M** |
-| `ROL A` | "Round-robin reviewer assignment" | `N Z C` | **M** |
-| `ROR A` | "Reverse round-robin" | `N Z C` | **M** |
-
-## 2.6 Extended branches
-
-| Mnemonic | Taken when | Use | Tag |
-|---|---|---|---|
-| `BMI label` | `N=1` | Extended REVIEW concern (N-based semantics) | **L** |
-| `BPL label` | `N=0` | All clear | **M** |
-| `BVS label` | `V=1` | "Merge conflict" | **M** |
-| `BVC label` | `V=0` | "Clean merge" | **M** |
-| `JMP (ind)` | always | "Chase a referenced issue through its blocker graph" | **M** |
-
-## 2.7 Extended transfers
-
-| Mnemonic | Effect | Tag |
-|---|---|---|
-| `TAX` | `X ← A` — use current issue as loop cursor | **L** |
-| `TAY` | `Y ← A` | **L** |
-| `TXA` / `TYA` | Inverse | **L** |
-
-## 2.8 Extended compare
-
-| Mnemonic | Effect | Flags | Tag |
-|---|---|---|---|
-| `CMP #imm` | Compare `A` to literal | `N Z C` | **L** |
-| `CPY #imm` | Compare file cursor | `N Z C` | **L** |
-
-## 2.9 Extended flags / mode
-
-| Mnemonic | Effect | Tag |
-|---|---|---|
-| `NOP` | No-op — genuine placeholder | **L** |
-| `SED` / `CLD` | Legacy: use `.DRYRUN ON` / `.DRYRUN OFF` directives instead | **L** |
-| `CLC` / `SEC` | "Force tests-passed state" | **M** |
-| `CLI` / `SEI` | "Enable/disable CI interrupt" | **M** |
-| `RTI` | Return from IRQ handler registered via `.IRQ`. Pairs with `JSR <handler>` for user-triggered preemption. | **M** |
-| `CLV` | "Clear conflict flag" | **M** |
-
-## 2.10 Extended REVIEW semantics
-
-Under `.EXTENDED ON`, `REVIEW` uses the traditional N-based semantics: `N=1` on concern, branch with `BMI`. The core `C`-based semantics still apply unless `.EXTENDED ON` has been seen — this lets extended programs port 6502-style review loops more faithfully.
-
----
-
-# 3 · Unsafe (illegal opcodes — flavor only)
-
-All six are `F`-tagged. They are **never executed**, not even with `.UNSAFE ON`. They are narrated for the joke and the joke alone.
-
-Require `.UNSAFE ON` to appear in the output at all. Without it, Claude refuses and emits `.ERR "unsafe required"`.
-
-| Mnemonic | Official name | Narrated effect |
-|---|---|---|
-| `LAX $zp` | Load A and X | "Load same issue into both cursors" |
-| `SAX $zp` | Store A AND X | "Commit intersection of diffs A and X" |
-| `DCP $zp` | DEC + CMP | "Decrement retry counter and compare in one op" |
-| `ISC $zp` | INC + SBC | "Advance counter, discount by position" |
-| `SLO $zp` | ASL + ORA | "Promote priority and merge into label mask" |
-| `RLA $zp` | ROL + AND | "Rotate priority through carry, mask against labels" |
-
----
-
-# 4 · Directives (assemble-time and output-time)
+# 2 · Directives (assemble-time and output-time)
 
 Lines prefixed with `.` are directives, not opcodes. Some affect how the assembler parses the file; others shape Claude's output.
 
@@ -248,7 +140,7 @@ Lines prefixed with `.` are directives, not opcodes. Some affect how the assembl
 # Totals
 
 - **Core ISA:** 15 opcodes + 9 vector aliases — all `L`
-- **Extended:** ~40 mnemonics — mix of `L` and `M`
-- **Unsafe:** 6 mnemonics — all `F`
+- **Extended:** ~40 mnemonics — mix of `L` and `M` — see `ISA-extended.md`
+- **Unsafe:** 6 mnemonics — all `F` — see `ISA-unsafe.md`
 
 Write programs in Core. Opt into Extended only when porting existing code or for retro flavor. Unsafe is a museum exhibit behind glass.

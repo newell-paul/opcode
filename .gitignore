@@ -1,0 +1,7 @@
+.DS_Store
+.opcode.json
+.opcode/
+.claude/
+blog-post.*
+*.png
+*.pdf

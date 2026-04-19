@@ -115,10 +115,9 @@ For an even simpler "just inspect a ticket" program (no fix, no commit), see `ex
 - `peek.s` — fetch + analyze + halt
 - `oneshot.s` — fix one issue with a retry branch
 - `drain-the-swamp.s` — drain the `bug` queue via the todo stack
-- `full-triage.s` — batch drain with LINT/TEST/REVIEW gate and `.IRQ` preempt
 
 ## Extended and Unsafe
 
-Extended (~40 mnemonics) and Unsafe (6 illegal opcodes) live in `ISA.md`. You opt in with `.EXTENDED ON` or `.UNSAFE ON`. Most extended ops are **metaphor** — narrated in the trace but not executed. Unsafe ops are pure flavor — narrated, never executed, not even with the directive set.
+Extended (~40 mnemonics) and Unsafe (6 illegal opcodes) live in `ISA-extended.md` and `ISA-unsafe.md`. You opt in with `.EXTENDED ON` or `.UNSAFE ON`. Most extended ops are **metaphor** — narrated in the trace but not executed. Unsafe ops are pure flavor — narrated, never executed, not even with the directive set.
 
 You don't need either layer to write a real program.

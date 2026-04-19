@@ -13,9 +13,9 @@
 
 retry:  JSR     FIX         ; one more attempt
         JSR     TEST
-        BCC     bail      ; still failing → bail
+        BCC     bail        ; still failing → bail
         JSR     REVIEW
-        BCC     bail      ; still concerns → bail
+        BCC     bail        ; still concerns → bail
         BRK                 ; commit + halt
 
-bail: RTS                 ; leave uncommitted branch for a human
+bail: RTS                   ; leave uncommitted branch for a human

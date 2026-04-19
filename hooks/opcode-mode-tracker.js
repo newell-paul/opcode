@@ -33,8 +33,8 @@ function deleteFlag(p) {
 
 function isActivation(prompt) {
   if (/^\/asm\b/i.test(prompt)) return true;
-  if (/\bassemble\b/i.test(prompt)) return true;
-  if (/\b\w+\.s\b/.test(prompt)) return true;
+  if (/\bassemble\s+(this|the\s+program|it)\b/i.test(prompt)) return true;
+  if (/\b[\w/-]+\.s\b/.test(prompt) && /\b(run|asm|assemble|exec)\b/i.test(prompt)) return true;
   if (/^(lda|jsr|brk|rts)\b/i.test(prompt)) return true;
   return false;
 }
