@@ -1,0 +1,34 @@
+{
+  "name": "opcode",
+  "description": "6502-inspired DSL for structured triage-and-fix workflows. Activate with /asm or by naming a .s file. Responds in assembly trace, not prose.",
+  "author": {
+    "name": "Paul Newell",
+    "url": "https://github.com/paulnewell"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/opcode-activate.js\"",
+            "timeout": 5,
+            "statusMessage": "Loading opcode skill..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/opcode-mode-tracker.js\"",
+            "timeout": 5,
+            "statusMessage": "Tracking opcode mode..."
+          }
+        ]
+      }
+    ]
+  }
+}

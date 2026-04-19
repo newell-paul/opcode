@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "opcode",
+  "description": "6502-inspired DSL for structured, replayable triage-and-fix workflows against GitHub/GitLab. 5-8x output token reduction. Responds in assembly trace.",
+  "owner": {
+    "name": "Paul Newell",
+    "url": "https://github.com/paulnewell"
+  },
+  "plugins": [
+    {
+      "name": "opcode",
+      "description": "Run .s programs against your forge. ANALYZE → FIX → TEST → PUSH in assembly, not prose.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
