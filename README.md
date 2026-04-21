@@ -2,7 +2,7 @@
 
 **6502 mnemonics. Modern AI execution. Workflows as programs.**
 
-A Claude Code skill that maps the 6502 instruction set onto a triage-and-fix loop. You write `.s` files. Claude executes them. Its response is also assembly. `BRK` means "commit and halt."
+A Claude Code skill that maps the 6502 instruction set onto a triage-and-fix loop. You write .s files. Claude executes them. Its response is also assembly. BRK means "commit and halt."
 
 > Prose prompts invite interpretation. Assembly doesn't.
 
@@ -36,30 +36,6 @@ Requires `gh` (GitHub) or `glab` (GitLab) authenticated in your shell.
 ## Example — `oneshot.s`
 
 Fetch an issue, analyze it, fix it, test it, self-review, commit. One retry branch if the first attempt fails. If both fail, leave the branch uncommitted for a human.
-
-```asm
-        .FORGE  github      ; declared target forge (env var still overrides)
-        .DRYRUN ON          ; dry-run until you're sure; flip OFF for real
-
-        LDA     #42         ; issue 42
-        JSR     FETCH       ; pull issue into ISSUE
-        JSR     ANALYZE     ; plan → DIFF
-        JSR     FIX         ; edit file at FILE
-        JSR     TEST        ; run tests; sets C
-        BCC     retry       ; tests failed → retry branch
-        JSR     REVIEW      ; self-review; sets C
-        BCC     retry       ; concerns → retry branch
-        BRK                 ; commit + halt
-
-retry:  JSR     FIX         ; one more attempt
-        JSR     TEST
-        BCC     bail        ; still failing → bail
-        JSR     REVIEW
-        BCC     bail        ; still concerns → bail
-        BRK                 ; commit + halt
-
-bail: RTS                   ; leave uncommitted branch for a human
-```
 
 ![oneshot.s output](docs/images/one-shot-vt.png)
 
