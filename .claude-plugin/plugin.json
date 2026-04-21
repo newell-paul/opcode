@@ -3,7 +3,7 @@
   "description": "6502-inspired DSL for structured triage-and-fix workflows. Activate with /asm or by naming a .s file. Responds in assembly trace, not prose.",
   "author": {
     "name": "Paul Newell",
-    "url": "https://github.com/paulnewell"
+    "url": "https://github.com/newell-paul"
   },
   "hooks": {
     "SessionStart": [

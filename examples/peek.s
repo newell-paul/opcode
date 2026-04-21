@@ -1,6 +1,9 @@
-        .FORGE  github      ; declared target forge (env var still overrides)
+        .FORGE  github      
 
         LDA     #42         ; issue 42
-        JSR     FETCH       ; pull ticket into ISSUE
-        JSR     ANALYZE     ; read title/body/comments, plan → DIFF
-        RTS                 ; halt without committing
+        JSR     FETCH       
+        JSR     FIX 
+        JSR     TEST
+        BCC     SKIP        ; tests failed bail
+        BRK                 ; commit + halt
+skip:   RTS        

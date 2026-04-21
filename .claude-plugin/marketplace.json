@@ -4,7 +4,7 @@
   "description": "6502-inspired DSL for structured, replayable triage-and-fix workflows against GitHub/GitLab. 5-8x output token reduction. Responds in assembly trace.",
   "owner": {
     "name": "Paul Newell",
-    "url": "https://github.com/paulnewell"
+    "url": "https://github.com/newell-paul"
   },
   "plugins": [
     {

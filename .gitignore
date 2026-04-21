@@ -5,3 +5,5 @@
 blog-post.*
 *.png
 *.pdf
+!docs/images/
+!docs/images/*.png

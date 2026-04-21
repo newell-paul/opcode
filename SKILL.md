@@ -6,21 +6,11 @@ description: A semantic 6502-inspired DSL for structured, replayable triage-and-
 # opcode
 
 ### Opcode Oriented Programming (OOP)
-### 6502 mnemonics. Modern AI execution. Fewer tokens.
+### 6502 mnemonics. Structured, replayable triage.
 
 > Every program ends the same way: `BRK`. Commit the work. Halt the machine.
 
-## Why this exists
-
-Three real wins, in order of importance:
-
-1. **Fewer tokens.** Claude's *output* — the expensive side of the pipe — drops by 5–8× because the response format is itself a `.s` program. No filler, no restatement, no markdown, no "Let me now…". A full triage session that would normally be 800 tokens of prose becomes ~150 tokens of assembly trace. See "Output format" below for the rules that earn this.
-2. **Structured, replayable workflows.** A `.s` file is a versionable, diffable, reviewable recipe. Commit it alongside the code, re-run it on the next batch of issues, and read the trace back as an audit log.
-3. **A forcing function.** The 6502 aesthetic is fun, but the constraint is useful — you commit to a verb sequence before execution instead of wandering through chat mode, and the resulting traces scan faster than prose.
-
-This is a **semantic 6502-inspired DSL**, not literal 6502. The opcodes *look* like 6502 because the aesthetic is fun and the constraint is useful, but the language is tuned for issue triage, not byte-accurate emulation. The **core ISA is 15 opcodes** you can hold in your head; an optional extended layer mimics more of the real 6502 for completeness and nostalgia.
-
-> **Honest note on "fewer tokens":** the savings come almost entirely from Claude's output format, not from the assembly input. Writing `JSR FIX` instead of "please fix it" is a wash. The win is that Claude's *reply* is also assembly, and BPE tokenization rewards short structured output. Sessions with many tool calls save the most — prose Claude narrates every step; opcode Claude just emits one trace line per instruction.
+A **semantic 6502-inspired DSL** for issue triage — not literal 6502. A `.s` file is a versionable recipe: commit it alongside the code, re-run it on the next batch of issues, read the trace as an audit log. The **core ISA is 15 opcodes**; an optional extended layer adds more of the real 6502 for completeness and nostalgia.
 
 ## Ticket contract — tickets are the task package
 
