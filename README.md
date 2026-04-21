@@ -2,7 +2,7 @@
 
 A Claude Code skill that maps the 6502 instruction set onto a triage-and-fix loop. You write .s files. Claude executes them. Its response is also assembly. BRK means "commit and halt."
 
-> 6502 mnemonics. Modern AI execution. Workflows as programs.
+> 6502 mnemonics. Modern AI execution. Workflows as code.
 
 ---
 
