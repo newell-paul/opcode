@@ -35,10 +35,10 @@ That trace is structured. Diffable. Greppable. Re-runnable. Whether it costs few
 
 ## One Shot, One Fix
 
-`oneshot.s` is the next step up: fetch an issue, analyze it, fix it, test it, self-review, and commit — with a single retry branch if the first attempt fails.
+`oneshot.s` is the next step up: fetch an issue, analyze it, fix it, test it, self-review, and commit, with a single retry branch if the first attempt fails.
 
 
-If the first fix passes tests and review, `BRK` commits immediately. If not, the retry branch gives it one more shot. If that also fails, `RTS` leaves the branch uncommitted for a human to pick up. The carry flag is doing exactly what it did on the original chip — routing control flow on a binary result.
+If the first fix passes tests and review, `BRK` commits immediately. If not, the retry branch gives it one more shot. If that also fails, `RTS` leaves the branch uncommitted for a human to pick up. The carry flag is doing exactly what it did on the original chip,  routing control flow on a binary result.
 
 ![oneshot.s program output](docs/images/one-shot-vt.png)
 *oneshot.s - that's better, much easier on my old eyes*
@@ -90,7 +90,7 @@ The reason is asymmetric overhead. For small, deterministic tasks, the orchestra
 
 Maybe. if you're running the same triage pattern across many issues like scanning a backlog, fixing straightforward bugs and opening PRs then the token savings start making sense and the structured output is way tighter to read than endless TL;DR prose. The `.s` files are reviewable artifacts. The traces are audit logs. And the constraint of planning your workflow as a sequence of opcodes before execution turns out to be surprisingly good discipline.
 
-## Summary
+## BRK
 
 At the end of the day the question is the same one it's always been. Are you a quiche eater or a Real Programmer? Real Programmers don't need prose. They need opcodes, a carry flag and a `BRK` at the end.
 
